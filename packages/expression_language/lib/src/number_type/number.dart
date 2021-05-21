@@ -169,6 +169,9 @@ abstract class Number implements Comparable<Number> {
   /// Truncates this [Number] to an integer and returns the result as an [int]. */
   int toInt();
 
+  /// Returns [double] from [Number]
+  double toDouble();
+
   ///  Returns a decimal-point string-representation of `this`.
   ///  Converts `this` to a [Decimal] before computing the string representation.
   ///  If the absolute value of `this` is greater or equal to `10^21` then this

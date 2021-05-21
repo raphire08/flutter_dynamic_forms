@@ -31,7 +31,8 @@ class TestElement extends ExpressionProviderElement {
   String? id;
 
   @override
-  ExpressionProvider getExpressionProvider([String? propertyName]) {
+  ExpressionProvider getExpressionProvider(
+      [String? propertyName, bool? isLast]) {
     if (propertyName == null || propertyName == '') {
       propertyName = 'value';
     }

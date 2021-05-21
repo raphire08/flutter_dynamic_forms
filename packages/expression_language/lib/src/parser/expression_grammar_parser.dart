@@ -42,6 +42,12 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
       });
 
   @override
+  Parser function() => super.function().map((c) {
+        return createFunctionExpression(c[0].toString().toLowerCase(),
+            c[2] ?? <Expression>[], _expressionFactories);
+      });
+
+  @override
   Parser additiveExpression() => super.additiveExpression().map((c) {
         Expression left = c[0];
         for (var item in c[1]) {
@@ -183,14 +189,20 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
         if (c[1] == null) {
           return c[0];
         }
-        return createConditionalExpression(c[0], c[1][1], c[1][3]);
+        return createConditionalExpression(
+          c[0],
+          c[1][1],
+          c[1][3],
+        );
       });
 
   @override
   Parser logicalOrExpression() => super.logicalOrExpression().map((c) {
         Expression expression = c[0];
         for (var item in c[1]) {
-          if (item[0].value == '||') {
+          if (item[0].value == '||' ||
+              item[0].value == 'or' ||
+              item[0].value == 'OR') {
             expression =
                 LogicalOrExpression(expression as Expression<bool>, item[1]);
             continue;
@@ -205,7 +217,9 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   Parser logicalAndExpression() => super.logicalAndExpression().map((c) {
         Expression expression = c[0];
         for (var item in c[1]) {
-          if (item[0].value == '&&') {
+          if (item[0].value == '&&' ||
+              item[0].value == 'and' ||
+              item[0].value == 'AND') {
             expression =
                 LogicalAndExpression(expression as Expression<bool>, item[1]);
             continue;
@@ -349,6 +363,53 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
       });
 
   @override
+  Parser data() => super.data().map((c) {
+        var expressionPath = <String>[];
+        String elementId = c[0][1];
+        expressionPath.add(elementId);
+        var expressionProviderElement = expressionProviderElementMap[elementId];
+        if (expressionProviderElement == null) {
+          throw NullReferenceException(
+              'Reference named {$elementId} does not exist.');
+        }
+        ExpressionProvider? expressionProvider;
+        if (c[1].length == 0) {
+          expressionProvider =
+              expressionProviderElement.getExpressionProvider();
+          return createDelegateExpression(expressionPath, expressionProvider);
+        }
+        for (var i = 0; i < c[1].length; i++) {
+          if (c[1][i][1].isEmpty) {
+            continue;
+          }
+          var propertyName = (c[1][i] is String) ? c[1][i] : c[1][i][1][0][1];
+          expressionPath.add(propertyName);
+          var isLast = i == c[1].length - 1 ? true : false;
+          expressionProvider = expressionProviderElement!
+              .getExpressionProvider(propertyName, isLast);
+          if (expressionProvider
+              is ExpressionProvider<ExpressionProviderElement>) {
+            expressionProviderElement =
+                expressionProvider.getExpression().evaluate();
+          }
+        }
+        return createDelegateExpression(expressionPath, expressionProvider);
+      });
+
+  @override
+  Parser formattingParameters() => super.formattingParameters().map((c) {
+        if (c[0] is Expression<bool>) {
+          if (c[0].evaluate() == true) {
+            return c[2];
+          } else {
+            return ConstantExpression(null);
+          }
+        }
+        throw InvalidRegularExpressionException(
+            'Expression before ; does not evaluates to a boolean value');
+      });
+
+  @override
   Parser integerNumber() => super
       .integerNumber()
       .flatten()
@@ -361,10 +422,9 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
       .map((c) => ConstantExpression<Decimal>(Decimal.parse(c)));
 
   @override
-  Parser singleLineString() => super
-      .singleLineString()
-      .flatten()
-      .map((c) => ConstantExpression<String>(c.substring(1, c.length - 1)));
+  Parser singleLineString() => super.singleLineString().flatten().map((c) {
+        return ConstantExpression<String>(c.substring(1, c.length - 1));
+      });
 
   @override
   Parser functionParameters() => super.functionParameters().map((c) {
@@ -377,11 +437,9 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
       });
 
   @override
-  Parser literal() => super.literal().map((c) => c.value);
-
-  @override
-  Parser function() => super.function().map((c) => createFunctionExpression(
-      c[0], c[2] ?? <Expression>[], _expressionFactories));
+  Parser literal() => super.literal().map((c) {
+        return c.value;
+      });
 
   @override
   Parser TRUE() =>
@@ -390,4 +448,7 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   @override
   Parser FALSE() =>
       super.FALSE().map((c) => ConstantExpression<bool>(c.value != 'false'));
+
+  @override
+  Parser nullValue() => super.nullValue().map((c) => ConstantExpression(null));
 }

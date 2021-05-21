@@ -58,6 +58,12 @@ Expression createDelegateExpression(
       DelegateExpression<double?>(expressionPath, property),
     );
   }
+  if (property is ExpressionProvider<List<int>>) {
+    return DelegateExpression<List<int>>(expressionPath, property);
+  }
+  if (property is ExpressionProvider<List<double>>) {
+    return DelegateExpression<List<double>>(expressionPath, property);
+  }
   if (property is ExpressionProvider<ExpressionProviderElement>) {
     return DelegateExpression<ExpressionProviderElement>(
         expressionPath, property);
@@ -171,6 +177,22 @@ NullableToNonNullableExpression createNonNullableConversionExpression(
       'Unknown expression in conditional expression');
 }
 
+// Expression convertExpression(Expression expression) {
+//   if (expression is Expression<int>) {
+//     return IntToIntegerExpression(expression);
+//   }
+//   if (expression is Expression<int?>) {
+//     return NullableIntToIntegerExpression(expression);
+//   }
+//   if (expression is Expression<double>) {
+//     return DoubleToDecimalExpression(expression);
+//   }
+//   if (expression is Expression<double?>) {
+//     return NullableDoubleToDecimalExpression(expression);
+//   }
+//   return expression;
+// }
+
 Expression createFunctionExpression(
     String functionName,
     List<Expression> parameters,
@@ -179,4 +201,21 @@ Expression createFunctionExpression(
     throw UnknownFunctionException('Unknown function name $functionName');
   }
   return functionExpressionMap[functionName]!(parameters);
+}
+
+Expression returnFirst(
+  Expression expression,
+) {
+  if (expression.evaluate() == null) {
+    return ConstantExpression(null);
+  }
+  if (expression is Expression<List<double>>) {
+    return ConstantExpression<Number>(
+        Decimal.fromDouble(expression.evaluate()[0]));
+  } else if (expression is Expression<List<int>>) {
+    return ConstantExpression<Number>(
+        Decimal.fromInt(expression.evaluate()[0]));
+  } else {
+    return expression;
+  }
 }

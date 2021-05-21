@@ -25,7 +25,7 @@ List<FunctionExpressionFactory> getDefaultFunctionExpressionFactories() {
           IsNullFunctionExpression(parameters[0]),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'isEmpty',
+      name: 'isempty',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           IsEmptyFunctionExpression(parameters[0] as Expression<String>),

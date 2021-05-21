@@ -2,106 +2,133 @@ import 'package:petitparser/petitparser.dart';
 
 class ExpressionGrammarDefinition extends GrammarDefinition {
   @override
-  Parser start() => (ref(expression).end()).or(ref(failureState));
+  Parser start() => (ref0(expression).end() | ref0(formattingParameters).end())
+      .or(ref0(failureState));
 
-  Parser FALSE() => ref(token, 'false');
-  Parser TRUE() => ref(token, 'true');
+  Parser FALSE() => ref1(token, 'false');
+  Parser TRUE() => ref1(token, 'true');
   Parser LETTER() => letter();
   Parser DIGIT() => digit();
   Parser failureState() =>
-      (ref(expression).trim() & ref(fail).trim()) | ref(fail).trim();
+      (ref0(expression).trim() & ref0(fail).trim()) | ref0(fail).trim();
   Parser fail() => any();
-  Parser letterOrSpecialChar() => ref(LETTER) | ref(token, '_');
+  Parser letterOrSpecialChar() => ref0(LETTER) | ref1(token, '_');
 
   Parser decimalNumber() =>
-      ref(DIGIT) &
-      ref(DIGIT).star() &
+      ref0(DIGIT) &
+      ref0(DIGIT).star() &
       char('.') &
-      ref(DIGIT) &
-      ref(DIGIT).star();
-  Parser integerNumber() => ref(DIGIT) & ref(DIGIT).star();
+      ref0(DIGIT) &
+      ref0(DIGIT).star();
+  Parser integerNumber() => ref0(DIGIT) & ref0(DIGIT).star();
   Parser singleLineString() =>
-      char('"') & ref(stringContent).star() & char('"');
+      char('"') & ref0(stringContent).star() & char('"');
   Parser stringContent() => pattern('^"');
-  Parser literal() => ref(
+  Parser literal() => ref1(
       token,
-      ref(decimalNumber) |
-          ref(integerNumber) |
-          ref(TRUE) |
-          ref(FALSE) |
-          ref(singleLineString));
+      ref0(decimalNumber) |
+          ref0(integerNumber) |
+          ref0(TRUE) |
+          ref0(FALSE) |
+          ref0(singleLineString));
   Parser identifier() =>
-      ref(letterOrSpecialChar) & (ref(letterOrSpecialChar) | ref(DIGIT)).star();
+      ref0(letterOrSpecialChar) &
+      (ref0(letterOrSpecialChar) | ref0(DIGIT)).star();
 
   Parser function() =>
-      ref(identifier).flatten() &
-      ref(token, '(') &
-      ref(functionParameters).optional() &
-      ref(token, ')');
+      ref0(identifier).flatten() &
+      ref1(token, '(') &
+      ref0(functionParameters).optional() &
+      ref1(token, ')');
   Parser functionParameters() =>
-      (ref(expression) & ref(token, ',')).star() & ref(expression);
+      (ref0(expression) & ref1(token, ',')).star() & ref0(expression);
 
-  Parser additiveOperator() => ref(token, '+') | ref(token, '-');
+  Parser formattingParameters() =>
+      ref0(expression) & ref1(token, ';') & ref0(expression);
+
+  Parser additiveOperator() => ref1(token, '+') | ref1(token, '-');
   Parser relationalOperator() =>
-      ref(token, '>=') | ref(token, '>') | ref(token, '<=') | ref(token, '<');
+      ref1(token, '>=') |
+      ref1(token, '>') |
+      ref1(token, '<=') |
+      ref1(token, '<');
 
-  Parser equalityOperator() => ref(token, '==') | ref(token, '!=');
+  Parser equalityOperator() => ref1(token, '==') | ref1(token, '!=');
   Parser multiplicativeOperator() =>
-      ref(token, '*') |
-      ref(token, '/') |
-      ref(token, '~') & ref(token, '/') |
-      ref(token, '%');
+      ref1(token, '*') |
+      ref1(token, '/') |
+      ref1(token, '~') & ref1(token, '/') |
+      ref1(token, '%');
 
-  Parser unaryNegateOperator() => ref(token, '-') | ref(token, '!');
+  Parser unaryNegateOperator() => ref1(token, '-') | ref1(token, '!');
 
   Parser expressionInParentheses() =>
-      ref(token, '(') & ref(expression) & ref(token, ')');
+      ref1(token, '(') & ref0(expression) & ref1(token, ')');
 
-  Parser expression() => ref(conditionalExpression);
+  Parser expression() => ref0(conditionalExpression);
 
   Parser conditionalExpression() =>
-      ref(logicalOrExpression) &
-      (ref(token, '?') & ref(expression) & ref(token, ':') & ref(expression))
+      ref0(logicalOrExpression) &
+      (ref1(token, '?') &
+              ref0(expression) &
+              ref1(token, ':') &
+              ref0(expression))
           .optional();
 
   Parser logicalOrExpression() =>
-      ref(logicalAndExpression) &
-      (ref(token, '||') & ref(logicalAndExpression)).star();
+      ref0(logicalAndExpression) &
+      ((ref1(token, '||') | ref1(token, 'or') | ref1(token, 'OR')) &
+              ref0(logicalAndExpression))
+          .star();
 
   Parser logicalAndExpression() =>
-      ref(equalityExpression) &
-      (ref(token, '&&') & ref(equalityExpression)).star();
+      ref0(equalityExpression) &
+      ((ref1(token, '&&') | ref1(token, 'and') | ref1(token, 'AND')) &
+              ref0(equalityExpression))
+          .star();
 
   Parser equalityExpression() =>
-      ref(relationalExpression) &
-      (ref(equalityOperator) & ref(relationalExpression)).optional();
+      ref0(relationalExpression) &
+      (ref0(equalityOperator) & ref0(relationalExpression)).optional();
 
   Parser relationalExpression() =>
-      ref(additiveExpression) &
-      (ref(relationalOperator) & ref(additiveExpression)).optional();
+      ref0(additiveExpression) &
+      (ref0(relationalOperator) & ref0(additiveExpression)).optional();
 
   Parser additiveExpression() =>
-      ref(multiplicativeExpression) &
-      (ref(additiveOperator) & ref(multiplicativeExpression)).star();
+      ref0(multiplicativeExpression) &
+      (ref0(additiveOperator) & ref0(multiplicativeExpression)).star();
 
   Parser multiplicativeExpression() =>
-      ref(postfixOperatorExpression) &
-      (ref(multiplicativeOperator) & ref(postfixOperatorExpression)).star();
+      ref0(postfixOperatorExpression) &
+      (ref0(multiplicativeOperator) & ref0(postfixOperatorExpression)).star();
 
   Parser postfixOperatorExpression() =>
-      ref(unaryExpression) & ref(token, '!').optional();
+      ref0(unaryExpression) & ref1(token, '!').optional();
 
   Parser unaryExpression() =>
-      ref(literal) |
-      ref(expressionInParentheses) |
-      ref(function) |
-      ref(reference) |
-      ref(unaryNegateOperator) & ref(unaryExpression);
+      ref0(function) |
+      ref0(data) |
+      ref0(literal) |
+      ref0(expressionInParentheses) |
+      ref0(reference) |
+      ref0(nullValue) |
+      ref0(unaryNegateOperator) & ref0(unaryExpression);
 
   Parser reference() =>
       char('@') &
-      ref(identifier).flatten() &
-      (char('.') & ref(identifier).flatten()).star();
+      ref0(identifier).flatten() &
+      (char('.') & ref0(identifier).flatten()).star();
+
+  Parser dataReference() =>
+      ref1(token, '[') & ref0(identifier).flatten() & ref1(token, ']');
+
+  Parser data() =>
+      ref0(dataReference) &
+      (char('.') & (ref0(dataReference)).star() | ref0(identifier).flatten())
+          .star();
+
+  Parser nullValue() => ref1(token, 'null');
 
   Parser token(Object input) {
     if (input is Parser) {
@@ -109,7 +136,7 @@ class ExpressionGrammarDefinition extends GrammarDefinition {
     } else if (input is String) {
       return token(input.length == 1 ? char(input) : string(input));
     } else if (input is Function) {
-      return token(ref(input));
+      return token(ref0(input()));
     }
     throw ArgumentError.value(input, 'invalid token parser');
   }

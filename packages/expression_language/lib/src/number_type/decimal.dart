@@ -144,6 +144,7 @@ class Decimal extends Number {
   /// If the number is not representable as a [double], an approximation is
   /// returned. For numerically large integers, the approximation may be
   /// infinite.
+  @override
   double toDouble() => _rational.toDouble();
 
   @override

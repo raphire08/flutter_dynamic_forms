@@ -106,6 +106,9 @@ class Integer extends Number {
   int toInt() => value;
 
   @override
+  double toDouble() => value.toDouble();
+
+  @override
   String toStringAsExponential([int? fractionDigits]) =>
       Decimal.fromInt(value).toStringAsExponential(fractionDigits);
 
