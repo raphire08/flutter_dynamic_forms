@@ -13,13 +13,13 @@ List<FunctionExpressionFactory> getDefaultFunctionExpressionFactories() {
           LengthFunctionExpression(parameters[0] as Expression<String>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'toString',
+      name: 'tostring',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           ToStringFunctionExpression(parameters[0]),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'isNull',
+      name: 'isnull',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           IsNullFunctionExpression(parameters[0]),
@@ -31,7 +31,7 @@ List<FunctionExpressionFactory> getDefaultFunctionExpressionFactories() {
           IsEmptyFunctionExpression(parameters[0] as Expression<String>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'isNullOrEmpty',
+      name: 'isnullorempty',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           IsNullOrEmptyFunctionExpression(parameters[0] as Expression<String?>),
@@ -43,7 +43,7 @@ List<FunctionExpressionFactory> getDefaultFunctionExpressionFactories() {
           parameters[0] as Expression<List<dynamic>>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'dateTime',
+      name: 'datetime',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           DateTimeFunctionExpression(parameters[0] as Expression<String>),
@@ -60,40 +60,40 @@ List<FunctionExpressionFactory> getDefaultFunctionExpressionFactories() {
       createFunctionExpression: (parameters) => NowFunctionExpression(),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'nowInUtc',
+      name: 'nowinutc',
       parametersLength: 0,
       createFunctionExpression: (parameters) => NowInUtcFunctionExpression(),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'diffDateTime',
+      name: 'diffdatetime',
       parametersLength: 2,
       createFunctionExpression: (parameters) => DiffDateTimeFunctionExpression(
           parameters[0] as Expression<DateTime>,
           parameters[1] as Expression<DateTime>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'durationInDays',
+      name: 'durationindays',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           DurationInDaysFunctionExpression(
               parameters[0] as Expression<Duration>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'durationInHours',
+      name: 'durationinhours',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           DurationInHoursFunctionExpression(
               parameters[0] as Expression<Duration>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'durationInMinutes',
+      name: 'durationinminutes',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           DurationInMinutesFunctionExpression(
               parameters[0] as Expression<Duration>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'durationInSeconds',
+      name: 'durationinseconds',
       parametersLength: 1,
       createFunctionExpression: (parameters) =>
           DurationInSecondsFunctionExpression(
@@ -114,14 +114,14 @@ List<FunctionExpressionFactory> getDefaultFunctionExpressionFactories() {
           parameters[1] as Expression<String>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'startsWith',
+      name: 'startswith',
       parametersLength: 2,
       createFunctionExpression: (parameters) => StartsWithFunctionExpression(
           parameters[0] as Expression<String>,
           parameters[1] as Expression<String>),
     ),
     ExplicitFunctionExpressionFactory(
-      name: 'endsWith',
+      name: 'endswith',
       parametersLength: 2,
       createFunctionExpression: (parameters) => EndsWithFunctionExpression(
           parameters[0] as Expression<String>,
