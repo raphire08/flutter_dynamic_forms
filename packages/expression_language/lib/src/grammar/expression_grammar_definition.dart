@@ -60,7 +60,7 @@ class ExpressionGrammarDefinition extends GrammarDefinition {
       ref1(token, '~') & ref1(token, '/') |
       ref1(token, '%');
 
-  Parser unaryNegateOperator() => ref1(token, '-') | ref1(token, '!');
+  Parser unaryNegateOperator() => ref1(token, '-') | ref1(token, '!!');
 
   Parser expressionInParentheses() =>
       ref1(token, '(') & ref0(expression) & ref1(token, ')');
@@ -104,7 +104,7 @@ class ExpressionGrammarDefinition extends GrammarDefinition {
       (ref0(multiplicativeOperator) & ref0(postfixOperatorExpression)).star();
 
   Parser postfixOperatorExpression() =>
-      ref0(unaryExpression) & ref1(token, '!').optional();
+      ref0(unaryExpression) & ref1(token, '!!').optional();
 
   Parser unaryExpression() =>
       ref0(function) |
