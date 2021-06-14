@@ -5,7 +5,7 @@ void main() {
       customFunctionExpressionFactories:
           getDefaultFunctionExpressionFactories());
   var parser = expressionGrammarDefinition.build();
-  var result = parser.parse('isEmpty("")');
+  var result = parser.parse('isEmpty(\'\')');
   var expression = result.value as Expression;
   var value = expression.evaluate();
   print(value);
