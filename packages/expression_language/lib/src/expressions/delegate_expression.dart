@@ -31,7 +31,7 @@ class DelegateExpression<T> extends Expression<T> {
     var isLastItemElement = true;
     for (var i = 1; i < expressionPath.length; i++) {
       isLastItemElement = false;
-      var propertyName = expressionPath[i];
+      var propertyName = expressionPath[i].toLowerCase();
       expressionProvider =
           expressionProviderElement.getExpressionProvider(propertyName);
       if (expressionProvider is ExpressionProvider<ExpressionProviderElement>) {

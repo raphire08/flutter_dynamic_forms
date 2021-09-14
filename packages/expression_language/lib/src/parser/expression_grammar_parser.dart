@@ -335,7 +335,7 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   @override
   Parser reference() => super.reference().map((c) {
         var expressionPath = <String>[];
-        String elementId = c[1];
+        String elementId = (c[1] as String).toLowerCase();
         expressionPath.add(elementId);
         var expressionProviderElement = expressionProviderElementMap[elementId];
         if (expressionProviderElement == null) {
@@ -349,7 +349,8 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           return createDelegateExpression(expressionPath, expressionProvider);
         }
         for (var i = 0; i < c[2].length; i++) {
-          var propertyName = c[2][i][1];
+          var propertyName = (c[2][i][1] as String).toLowerCase();
+          ;
           expressionPath.add(propertyName);
           expressionProvider =
               expressionProviderElement!.getExpressionProvider(propertyName);
@@ -365,7 +366,8 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   @override
   Parser data() => super.data().map((c) {
         var expressionPath = <String>[];
-        String elementId = c[0][1];
+        String elementId = (c[0][1] as String).toLowerCase();
+        ;
         expressionPath.add(elementId);
         var expressionProviderElement = expressionProviderElementMap[elementId];
         if (expressionProviderElement == null) {
@@ -382,7 +384,9 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           if (c[1][i][1].isEmpty) {
             continue;
           }
-          var propertyName = (c[1][i] is String) ? c[1][i] : c[1][i][1][0][1];
+          var propertyName = (c[1][i] is String)
+              ? (c[1][i] as String).toLowerCase()
+              : (c[1][i][1][0][1] as String).toLowerCase();
           expressionPath.add(propertyName);
           var isLast = i == c[1].length - 1 ? true : false;
           expressionProvider = expressionProviderElement!
