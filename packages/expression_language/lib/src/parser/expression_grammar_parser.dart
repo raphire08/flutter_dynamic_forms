@@ -253,6 +253,15 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           } else if ((left is Expression<Duration>) &&
               (right is Expression<Duration>)) {
             left = EqualDurationExpression(left, right);
+          } else if (!(left is Expression<Null>) &&
+              (right is Expression<Null>)) {
+            left = ConstantExpression<bool>(false);
+          } else if ((left is Expression<Null>) &&
+              !(right is Expression<Null>)) {
+            left = ConstantExpression<bool>(false);
+          } else if ((left is Expression<Null>) &&
+              (right is Expression<Null>)) {
+            left = ConstantExpression<bool>(true);
           }
         } else if (item[0].value == '!=') {
           if ((left is Expression<Number>) && (right is Expression<Number>)) {
@@ -269,6 +278,15 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           } else if ((left is Expression<Duration>) &&
               (right is Expression<Duration>)) {
             left = NegateBoolExpression(EqualDurationExpression(left, right));
+          } else if (!(left is Expression<Null>) &&
+              (right is Expression<Null>)) {
+            left = NegateBoolExpression(ConstantExpression<bool>(false));
+          } else if ((left is Expression<Null>) &&
+              !(right is Expression<Null>)) {
+            left = NegateBoolExpression(ConstantExpression<bool>(false));
+          } else if ((left is Expression<Null>) &&
+              (right is Expression<Null>)) {
+            left = NegateBoolExpression(ConstantExpression<bool>(true));
           } else {
             throw UnknownExpressionTypeException(
                 'Unknown equality expression type');
