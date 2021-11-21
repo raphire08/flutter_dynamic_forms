@@ -5,7 +5,7 @@ void main() {
       customFunctionExpressionFactories:
           getDefaultFunctionExpressionFactories());
   var parser = expressionGrammarDefinition.build();
-  var result = parser.parse('null!=null');
+  var result = parser.parse('null * null/4 + null/4 + 5');
   var expression = result.value as Expression;
   var value = expression.evaluate();
   print(value);
