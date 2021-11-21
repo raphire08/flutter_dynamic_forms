@@ -50,13 +50,17 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   @override
   Parser additiveExpression() => super.additiveExpression().map((c) {
         Expression left = c[0];
-        if (left is Expression<Null>) {
-          left = ConstantExpression<Integer>(Integer(0));
+        if (left is DelegateExpression<Integer?>) {
+          if (left.evaluate() == null) {
+            left = ConstantExpression<Integer>(Integer(0));
+          }
         }
         for (var item in c[1]) {
           Expression right = item[1];
-          if (right is Expression<Null>) {
-            right = ConstantExpression<Integer>(Integer(0));
+          if (right is DelegateExpression<Integer?>) {
+            if (right.evaluate() == null) {
+              right = ConstantExpression<Integer>(Integer(0));
+            }
           }
           if (item[0].value == '+') {
             if (left is Expression<Number> && right is Expression<Number>) {
@@ -116,13 +120,17 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   Parser multiplicativeExpression() =>
       super.multiplicativeExpression().map((c) {
         Expression left = c[0];
-        if (left is Expression<Null>) {
-          left = ConstantExpression<Integer>(Integer(0));
+        if (left is DelegateExpression<Integer?>) {
+          if (left.evaluate() == null) {
+            left = ConstantExpression<Integer>(Integer(0));
+          }
         }
         for (var item in c[1]) {
           Expression right = item[1];
-          if (right is Expression<Null>) {
-            right = ConstantExpression<Integer>(Integer(0));
+          if (right is DelegateExpression<Integer?>) {
+            if (right.evaluate() == null) {
+              right = ConstantExpression<Integer>(Integer(0));
+            }
           }
           if ((item[0] is List) &&
               (item[0][0].value == '~') &&
