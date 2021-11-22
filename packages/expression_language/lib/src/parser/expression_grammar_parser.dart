@@ -253,11 +253,20 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           } else if ((left is Expression<Duration>) &&
               (right is Expression<Duration>)) {
             left = EqualDurationExpression(left, right);
-          } else if (!(left is Expression<Null>) &&
+          } else if ((left is Expression<Number?>) &&
               (right is Expression<Null>)) {
-            left = ConstantExpression<bool>(false);
+            if (left.evaluate() == null) {
+              left = ConstantExpression<bool>(true);
+            } else {
+              left = ConstantExpression<bool>(false);
+            }
           } else if ((left is Expression<Null>) &&
-              !(right is Expression<Null>)) {
+              (right is Expression<Number?>)) {
+            if (right.evaluate() == null) {
+              left = ConstantExpression<bool>(true);
+            } else {
+              left = ConstantExpression<bool>(false);
+            }
             left = ConstantExpression<bool>(false);
           } else if ((left is Expression<Null>) &&
               (right is Expression<Null>)) {
@@ -278,15 +287,23 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           } else if ((left is Expression<Duration>) &&
               (right is Expression<Duration>)) {
             left = NegateBoolExpression(EqualDurationExpression(left, right));
-          } else if (!(left is Expression<Null>) &&
+          } else if ((left is Expression<Number?>) &&
               (right is Expression<Null>)) {
-            left = NegateBoolExpression(ConstantExpression<bool>(false));
+            if (left.evaluate() == null) {
+              left = ConstantExpression<bool>(false);
+            } else {
+              left = ConstantExpression<bool>(true);
+            }
           } else if ((left is Expression<Null>) &&
-              !(right is Expression<Null>)) {
-            left = NegateBoolExpression(ConstantExpression<bool>(false));
+              (right is Expression<Number?>)) {
+            if (right.evaluate() == null) {
+              left = ConstantExpression<bool>(false);
+            } else {
+              left = ConstantExpression<bool>(true);
+            }
           } else if ((left is Expression<Null>) &&
               (right is Expression<Null>)) {
-            left = NegateBoolExpression(ConstantExpression<bool>(true));
+            left = ConstantExpression<bool>(false);
           } else {
             throw UnknownExpressionTypeException(
                 'Unknown equality expression type');
