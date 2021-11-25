@@ -271,6 +271,16 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           } else if ((left is Expression<Null>) &&
               (right is Expression<Null>)) {
             left = ConstantExpression<bool>(true);
+          } else if (left is Expression<Number> &&
+              right is Expression<Number?>) {
+            if (right.evaluate() == null) {
+              left = ConstantExpression<bool>(false);
+            }
+          } else if (left is Expression<Number?> &&
+              right is Expression<Number>) {
+            if (left.evaluate() == null) {
+              left = ConstantExpression<bool>(false);
+            }
           }
         } else if (item[0].value == '!=') {
           if ((left is Expression<Number>) && (right is Expression<Number>)) {
@@ -304,6 +314,16 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
           } else if ((left is Expression<Null>) &&
               (right is Expression<Null>)) {
             left = ConstantExpression<bool>(false);
+          } else if (left is Expression<Number> &&
+              right is Expression<Number?>) {
+            if (right.evaluate() == null) {
+              left = ConstantExpression<bool>(true);
+            }
+          } else if (left is Expression<Number?> &&
+              right is Expression<Number>) {
+            if (left.evaluate() == null) {
+              left = ConstantExpression<bool>(true);
+            }
           } else {
             throw UnknownExpressionTypeException(
                 'Unknown equality expression type');
