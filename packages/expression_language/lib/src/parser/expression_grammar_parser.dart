@@ -281,11 +281,11 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
               left = ConstantExpression<bool>(false);
             }
           } else if (left is Expression<String> &&
-              right is Expression<String?>) {
+              right is Expression<Number?>) {
             if (right.evaluate() == null) {
               left = ConstantExpression<bool>(false);
             }
-          } else if (left is Expression<String?> &&
+          } else if (left is Expression<Number?> &&
               right is Expression<String>) {
             if (left.evaluate() == null) {
               left = ConstantExpression<bool>(false);
@@ -334,11 +334,11 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
               left = ConstantExpression<bool>(true);
             }
           } else if (left is Expression<String> &&
-              right is Expression<String?>) {
+              right is Expression<Number?>) {
             if (right.evaluate() == null) {
               left = ConstantExpression<bool>(true);
             }
-          } else if (left is Expression<String?> &&
+          } else if (left is Expression<Number?> &&
               right is Expression<String>) {
             if (left.evaluate() == null) {
               left = ConstantExpression<bool>(true);
