@@ -476,6 +476,12 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
   Parser formattingParameters() => super.formattingParameters().map((c) {
         if (c[0] is Expression<bool>) {
           if (c[0].evaluate() == true) {
+            if (c[2] is List<dynamic>) {
+              c[2] as List<dynamic>;
+              var value = c[2].fold(
+                  '', (previousValue, element) => previousValue + element);
+              return ConstantExpression(value);
+            }
             return c[2];
           } else {
             return ConstantExpression(null);

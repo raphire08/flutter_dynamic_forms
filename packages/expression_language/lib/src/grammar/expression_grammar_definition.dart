@@ -48,7 +48,9 @@ class ExpressionGrammarDefinition extends GrammarDefinition {
       (ref0(expression) & ref1(token, ',')).star() & ref0(expression);
 
   Parser formattingParameters() =>
-      ref0(expression) & ref1(token, ';') & ref0(expression);
+      ref0(expression) &
+      ref1(token, ';') &
+      (ref0(expression) | ref0(stringContent).star());
 
   Parser additiveOperator() => ref1(token, '+') | ref1(token, '-');
   Parser relationalOperator() =>

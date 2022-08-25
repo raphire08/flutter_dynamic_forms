@@ -5,7 +5,7 @@ void main() {
       customFunctionExpressionFactories:
           getDefaultFunctionExpressionFactories());
   var parser = expressionGrammarDefinition.build();
-  var result = parser.parse('25 == 26');
+  var result = parser.parse('25 <= 25; "Test Hours should be greater than 25"');
   var expression = result.value as Expression;
   var value = expression.evaluate();
   print(value);
