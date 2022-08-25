@@ -1,4 +1,3 @@
-import 'package:expression_language/src/expressions/expression_provider.dart';
 import 'package:expression_language/src/expressions/expressions.dart';
 import 'package:expression_language/src/grammar/expression_grammar_definition.dart';
 import 'package:expression_language/src/number_type/decimal.dart';
@@ -6,7 +5,6 @@ import 'package:expression_language/src/number_type/integer.dart';
 import 'package:expression_language/src/number_type/number.dart';
 import 'package:expression_language/src/parser/function_expression_factories/default_function_expression_factories.dart';
 import 'package:expression_language/src/parser/expression_factory.dart';
-import 'package:expression_language/src/parser/expression_parser_exceptions.dart';
 import 'package:expression_language/src/parser/function_expression_factory.dart';
 import 'package:petitparser/petitparser.dart';
 
@@ -238,7 +236,7 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
         }
         var item = c[1];
         var right = item[1];
-        if (item[0].value == '==') {
+        if (item[0].value == '==' || item[0].value == '=') {
           if ((left is Expression<Number>) && (right is Expression<Number>)) {
             left = EqualNumberExpression(left, right);
           } else if ((left is Expression<bool>) &&

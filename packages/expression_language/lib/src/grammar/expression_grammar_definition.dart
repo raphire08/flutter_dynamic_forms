@@ -57,7 +57,8 @@ class ExpressionGrammarDefinition extends GrammarDefinition {
       ref1(token, '<=') |
       ref1(token, '<');
 
-  Parser equalityOperator() => ref1(token, '==') | ref1(token, '!=');
+  Parser equalityOperator() =>
+      ref1(token, '==') | ref1(token, '!=') | ref1(token, '=');
   Parser multiplicativeOperator() =>
       ref1(token, '*') |
       ref1(token, '/') |
