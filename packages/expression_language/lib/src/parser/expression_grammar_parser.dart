@@ -288,6 +288,17 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
             if (left.evaluate() == null) {
               left = ConstantExpression<bool>(false);
             }
+          } else {
+            try {
+              if (left.evaluate() == right.evaluate()) {
+                left = ConstantExpression<bool>(true);
+              } else {
+                left = ConstantExpression<bool>(false);
+              }
+            } catch (e) {
+              throw UnSupportedDataTypeException(
+                  'Unsupported types for equality operator, Error: $e');
+            }
           }
         } else if (item[0].value == '!=') {
           if ((left is Expression<Number>) && (right is Expression<Number>)) {
@@ -342,8 +353,16 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
               left = ConstantExpression<bool>(true);
             }
           } else {
-            throw UnknownExpressionTypeException(
-                'Unknown equality expression type');
+            try {
+              if (left.evaluate() == right.evaluate()) {
+                left = ConstantExpression<bool>(false);
+              } else {
+                left = ConstantExpression<bool>(true);
+              }
+            } catch (e) {
+              throw UnSupportedDataTypeException(
+                  'Unsupported types for equality operator, Error: $e');
+            }
           }
         }
         return left;

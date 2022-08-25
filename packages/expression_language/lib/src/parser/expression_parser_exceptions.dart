@@ -48,3 +48,7 @@ class InvalidParameterCount extends ExpressionParserException {
 class InvalidRegularExpressionException extends ExpressionParserException {
   InvalidRegularExpressionException(String message) : super(message);
 }
+
+class UnSupportedDataTypeException extends ExpressionParserException {
+  UnSupportedDataTypeException(String message) : super(message);
+}
