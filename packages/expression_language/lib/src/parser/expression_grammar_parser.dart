@@ -493,6 +493,9 @@ class ExpressionGrammarParser extends ExpressionGrammarDefinition {
 
   @override
   Parser formattingParameters() => super.formattingParameters().map((c) {
+        if (c[0] is List && c[0].length >= 1) {
+          c[0] = c[0][1];
+        }
         if (c[0] is Expression<bool>) {
           if (c[0].evaluate() == true) {
             if (c[2] is List<dynamic>) {
